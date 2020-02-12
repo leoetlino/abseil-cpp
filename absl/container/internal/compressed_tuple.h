@@ -217,18 +217,9 @@ class ABSL_INTERNAL_COMPRESSED_TUPLE_DECLSPEC CompressedTuple
   explicit constexpr CompressedTuple(const Ts&... base)
       : CompressedTuple::CompressedTupleImpl(absl::in_place, base...) {}
 
-  template <typename... Vs,
-            absl::enable_if_t<
-                absl::conjunction<
-                    // Ensure we are not hiding default copy/move constructors.
-                    absl::negation<std::is_same<void(CompressedTuple),
-                                                void(absl::decay_t<Vs>...)>>,
-                    internal_compressed_tuple::TupleMoveConstructible<
-                        Ts, Vs&&>...>::value,
-                bool> = true>
-  explicit constexpr CompressedTuple(Vs&&... base)
+  explicit constexpr CompressedTuple(Ts&&... base)
       : CompressedTuple::CompressedTupleImpl(absl::in_place,
-                                             absl::forward<Vs>(base)...) {}
+                                             absl::forward<Ts>(base)...) {}
 
   template <int I>
   ElemT<I>& get() & {
